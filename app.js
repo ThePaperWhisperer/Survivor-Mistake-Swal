@@ -111,7 +111,7 @@ function choose() {
 	const { value: username } = await Swal.fire({
   title: "Choose an username.",
   input: "text",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
@@ -136,7 +136,7 @@ document.getElementById("ok").onclick = () => {
 	const { value: room } = await Swal.fire({
   title: "Choose a room name.",
   input: "text",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
@@ -147,7 +147,7 @@ document.getElementById("ok").onclick = () => {
 	const { value: password } = await Swal.fire({
   title: "Choose a password.",
   input: "password",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
@@ -193,7 +193,7 @@ document.getElementById("no").onclick = () => {
 	const { value: roomname } = await Swal.fire({
   title: "Enter a room name..",
   input: "text",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
@@ -205,7 +205,7 @@ document.getElementById("no").onclick = () => {
 	const { value: pass } = await Swal.fire({
   title: "Enter the password.",
   input: "password",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
@@ -227,7 +227,7 @@ socket.on("usernotadded", () => {
 	const { value: person } = await Swal.fire({
   title: "Choose a different username please.",
   input: "text",
-  inputValue,
+  
   showCancelButton: true,
   inputValidator: (value) => {
    
