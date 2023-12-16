@@ -131,7 +131,7 @@ document.getElementById("ok").onclick = async () => {
 
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
-	choose();
+	
 	 Swal.fire({
   title: "Choose a room name.",
   input: "text",
@@ -148,15 +148,29 @@ document.getElementById("ok").onclick = async () => {
   
 }).then((result2)=>{
 	password = result2.value;
-});
+			   Swal.fire({
+  title: "Choose an username.",
+  input: "text",
+  
+  showCancelButton: true,
+  
+}).then((result)=>{
+	username = result.value;
+	socket.emit("username", username);
+	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
+})
 	socket.emit("roomname", room);
 	socket.emit("password", password);
+		 
 		document.getElementById("heli").play();
+		 
 	speechSynthesis.speak(ss);	
 	ss.onend = ()=> {
 	document.getElementById("heli").pause();
 		load();
 	}
+});
+		
 })
 	
 };
@@ -196,7 +210,6 @@ speechSynthesis.speak(ss);
 document.getElementById("no").onclick = async () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
-	choose();
 	Swal.fire({
   title: "Enter a room name..",
   input: "text",
@@ -214,8 +227,17 @@ document.getElementById("no").onclick = async () => {
   
 }).then((result2)=>{
 	pass = result2.value;
-});
-	socket.emit("pass", pass);
+		 Swal.fire({
+  title: "Choose an username.",
+  input: "text",
+  
+  showCancelButton: true,
+  
+}).then((result)=>{
+	username = result.value;
+	socket.emit("username", username);
+	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
+			 socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
 speechSynthesis.speak(ss);
@@ -223,6 +245,9 @@ speechSynthesis.speak(ss);
 	document.getElementById("heli").pause();
 		load();
 	}
+})
+});
+	
 });
 	
 	
