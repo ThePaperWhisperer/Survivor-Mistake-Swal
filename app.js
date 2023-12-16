@@ -106,7 +106,7 @@ function hunt(e) {
 		}
 }
 	}
-async function choose() {
+ function choose() {
 	
 Swal.fire({
   title: "Choose an username.",
@@ -164,8 +164,16 @@ document.getElementById("ok").onclick = async () => {
 document.getElementById("neither").onclick = () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
-	choose();
-	
+Swal.fire({
+  title: "Choose an username.",
+  input: "text",
+  
+  showCancelButton: true,
+  
+}).then((result)=>{
+	username = result.value;
+	socket.emit("username", username);
+	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
 	document.getElementById("heli").play();
 speechSynthesis.speak(ss);
 	ss.onend = ()=> {
@@ -179,6 +187,9 @@ speechSynthesis.speak(ss);
 	console.log(link);
 		load();
 	}
+})
+	
+	
 
 	
 };
