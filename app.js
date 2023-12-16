@@ -106,18 +106,15 @@ function hunt(e) {
 		}
 }
 	}
-function choose() {
-	(async ()=>{
+async function choose() {
+	
 	const { value: username } = await Swal.fire({
   title: "Choose an username.",
   input: "text",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
 	socket.emit("username", username);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
 }
@@ -127,33 +124,25 @@ document.getElementById("text").hidden = true;
 document.body.style.background = "black";
 document.getElementById("option").innerHTML = "Do You Want To Create A Room?";
 
-document.getElementById("ok").onclick = () => {
+document.getElementById("ok").onclick = async () => {
 
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-	(async ()=>{
 	const { value: room } = await Swal.fire({
   title: "Choose a room name.",
   input: "text",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
-	(async ()=>{
 	const { value: password } = await Swal.fire({
   title: "Choose a password.",
   input: "password",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
 	socket.emit("roomname", room);
 	socket.emit("password", password);
 		document.getElementById("heli").play();
@@ -185,33 +174,25 @@ speechSynthesis.speak(ss);
 
 	
 };
-document.getElementById("no").onclick = () => {
+document.getElementById("no").onclick = async () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-(async ()=>{
 	const { value: roomname } = await Swal.fire({
   title: "Enter a room name..",
   input: "text",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
 	socket.emit("room", roomname);
-	(async ()=>{
 	const { value: pass } = await Swal.fire({
   title: "Enter the password.",
   input: "password",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
 	socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
@@ -222,18 +203,14 @@ speechSynthesis.speak(ss);
 	}
 	
 }
-socket.on("usernotadded", () => {
-	(async ()=>{
+socket.on("usernotadded", async() => {
 	const { value: person } = await Swal.fire({
   title: "Choose a different username please.",
   input: "text",
   
   showCancelButton: true,
-  inputValidator: (value) => {
-   
-  }
+  
 });
-	})();
 	socket.emit("username", person);
 });
 socket.on("roomclosed", (data) => {
