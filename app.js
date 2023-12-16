@@ -158,8 +158,7 @@ document.getElementById("ok").onclick = async () => {
 	username = result.value;
 	socket.emit("username", username);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
-})
-	socket.emit("roomname", room);
+				   socket.emit("roomname", room);
 	socket.emit("password", password);
 		 
 		document.getElementById("heli").play();
@@ -169,6 +168,8 @@ document.getElementById("ok").onclick = async () => {
 	document.getElementById("heli").pause();
 		load();
 	}
+})
+	
 });
 		
 })
