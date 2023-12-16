@@ -115,7 +115,7 @@ Swal.fire({
   showCancelButton: true,
   
 }).then((result)=>{
-	username = result;
+	username = result.value;
 })
 	socket.emit("username", username);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
@@ -138,7 +138,7 @@ document.getElementById("ok").onclick = async () => {
   showCancelButton: true,
   
 }).then((result)=>{
-	 room = result;
+	 room = result.value;
 })
 	 Swal.fire({
   title: "Choose a password.",
@@ -147,7 +147,7 @@ document.getElementById("ok").onclick = async () => {
   showCancelButton: true,
   
 }).then((result)=>{
-	password = result;
+	password = result.value;
 });
 	socket.emit("roomname", room);
 	socket.emit("password", password);
@@ -191,7 +191,7 @@ document.getElementById("no").onclick = async () => {
   showCancelButton: true,
   
 }).then((result)=>{
-	roomname = result;
+	roomname = result.value;
 });
 	socket.emit("room", roomname);
 	 Swal.fire({
@@ -201,7 +201,7 @@ document.getElementById("no").onclick = async () => {
   showCancelButton: true,
   
 }).then((result)=>{
-	pass = result;
+	pass = result.value;
 });
 	socket.emit("pass", pass);
 
@@ -221,7 +221,7 @@ socket.on("usernotadded", async() => {
   showCancelButton: true,
   
 }).then((result)=>{
-	person = result;
+	person = result.value;
 });
 	socket.emit("username", person);
 });
