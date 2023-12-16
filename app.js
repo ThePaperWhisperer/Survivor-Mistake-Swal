@@ -108,14 +108,14 @@ function hunt(e) {
 	}
 async function choose() {
 	
-	username = await Swal.fire({
+	const {value: o} = await Swal.fire({
   title: "Choose an username.",
   input: "text",
   
   showCancelButton: true,
   
 });
-	socket.emit("username", username);
+	socket.emit("username", o);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
 }
 document.getElementById("dialog").hidden = false;
@@ -129,14 +129,14 @@ document.getElementById("ok").onclick = async () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-	var room = await Swal.fire({
+	const{value: room} = await Swal.fire({
   title: "Choose a room name.",
   input: "text",
   
   showCancelButton: true,
   
 });
-	var password = await Swal.fire({
+	const {value: password} = await Swal.fire({
   title: "Choose a password.",
   input: "password",
   
@@ -178,7 +178,7 @@ document.getElementById("no").onclick = async () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-	var roomname = await Swal.fire({
+	const {value: roomname}= await Swal.fire({
   title: "Enter a room name..",
   input: "text",
   
@@ -186,7 +186,7 @@ document.getElementById("no").onclick = async () => {
   
 });
 	socket.emit("room", roomname);
-	var pass = await Swal.fire({
+	const {value: pass} = await Swal.fire({
   title: "Enter the password.",
   input: "password",
   
@@ -204,14 +204,14 @@ speechSynthesis.speak(ss);
 	
 }
 socket.on("usernotadded", async() => {
-	person = await Swal.fire({
+	const {value : n} = await Swal.fire({
   title: "Choose a different username please.",
   input: "text",
   
   showCancelButton: true,
   
 });
-	socket.emit("username", person);
+	socket.emit("username", n);
 });
 socket.on("roomclosed", (data) => {
 	if (
