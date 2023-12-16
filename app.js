@@ -116,9 +116,10 @@ Swal.fire({
   
 }).then((result)=>{
 	username = result.value;
-})
 	socket.emit("username", username);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
+})
+	
 }
 document.getElementById("dialog").hidden = false;
 document.getElementById("universe").hidden = true;
@@ -139,15 +140,14 @@ document.getElementById("ok").onclick = async () => {
   
 }).then((result)=>{
 	 room = result.value;
-})
-	 Swal.fire({
+		  Swal.fire({
   title: "Choose a password.",
   input: "password",
   
   showCancelButton: true,
   
-}).then((result)=>{
-	password = result.value;
+}).then((result2)=>{
+	password = result2.value;
 });
 	socket.emit("roomname", room);
 	socket.emit("password", password);
@@ -157,6 +157,8 @@ document.getElementById("ok").onclick = async () => {
 	document.getElementById("heli").pause();
 		load();
 	}
+})
+	
 };
 
 document.getElementById("neither").onclick = () => {
@@ -192,16 +194,15 @@ document.getElementById("no").onclick = async () => {
   
 }).then((result)=>{
 	roomname = result.value;
-});
-	socket.emit("room", roomname);
+		socket.emit("room", roomname);
 	 Swal.fire({
   title: "Enter the password.",
   input: "password",
   
   showCancelButton: true,
   
-}).then((result)=>{
-	pass = result.value;
+}).then((result2)=>{
+	pass = result2.value;
 });
 	socket.emit("pass", pass);
 
@@ -211,6 +212,8 @@ speechSynthesis.speak(ss);
 	document.getElementById("heli").pause();
 		load();
 	}
+});
+	
 	
 }
 socket.on("usernotadded", async() => {
@@ -222,8 +225,8 @@ socket.on("usernotadded", async() => {
   
 }).then((result)=>{
 	person = result.value;
-});
 	socket.emit("username", person);
+});
 });
 socket.on("roomclosed", (data) => {
 	if (
