@@ -107,7 +107,17 @@ function hunt(e) {
 }
 	}
 function choose() {
-	username = prompt("Choose an username!");
+	(async ()=>{
+	const { value: username } = await Swal.fire({
+  title: "Choose an username.",
+  input: "text",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
 	socket.emit("username", username);
 	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
 }
@@ -122,8 +132,28 @@ document.getElementById("ok").onclick = () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-	var room = prompt("Choose a private room name.");
-	var password = prompt("Choose a password.");
+	(async ()=>{
+	const { value: room } = await Swal.fire({
+  title: "Choose a room name.",
+  input: "text",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
+	(async ()=>{
+	const { value: password } = await Swal.fire({
+  title: "Choose a password.",
+  input: "password",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
 	socket.emit("roomname", room);
 	socket.emit("password", password);
 		document.getElementById("heli").play();
@@ -159,9 +189,29 @@ document.getElementById("no").onclick = () => {
 	document.getElementById("dialog").hidden = true;
 	document.body.style.background = "url(sky.jpg)";
 	choose();
-	var roomname = prompt("Enter the room name.");
+(async ()=>{
+	const { value: roomname } = await Swal.fire({
+  title: "Enter a room name..",
+  input: "text",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
 	socket.emit("room", roomname);
-	var pass = prompt("Enter the room's password.");
+	(async ()=>{
+	const { value: pass } = await Swal.fire({
+  title: "Enter the password.",
+  input: "password",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
 	socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
@@ -173,9 +223,17 @@ speechSynthesis.speak(ss);
 	
 }
 socket.on("usernotadded", () => {
-	person = prompt(
-		"Choose a new username. Your old one was either taken, inappropriate, or blank!"
-	);
+	(async ()=>{
+	const { value: person } = await Swal.fire({
+  title: "Choose a different username please.",
+  input: "text",
+  inputValue,
+  showCancelButton: true,
+  inputValidator: (value) => {
+   
+  }
+});
+	})();
 	socket.emit("username", person);
 });
 socket.on("roomclosed", (data) => {
@@ -250,13 +308,7 @@ clearTimeout(timeout)
 												 food -= 10;
 												 if(food < 0){
 													 Swal.fire({text: "You do not have enough food. Game Over."});
-													 var attempt = confirm("Try again?");
-													 if(attempt == true){
-														 location.reload();
-													 }
-													 else{
-														 window.close();
-													 }
+													 location.reload();
 												 }
 												 daynumber++;
 												 if(daynumber === 2){
@@ -282,13 +334,7 @@ clearTimeout(timeout)
 			thirst += 10;
 			if(thirst >=30){
 				 Swal.fire({text: "You did not drink enough. Game Over."});
-													 var attempt = confirm("Try again?");
-													 if(attempt == true){
-														 location.reload();
-													 }
-													 else{
-														 window.close();
-													 }
+													location.reload()
 			}
 		}
 		Swal.fire({text: "Wake up sleepyhead! You must go live today!"});
