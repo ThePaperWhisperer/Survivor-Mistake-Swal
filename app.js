@@ -439,7 +439,7 @@ function load() {
 						house = true;
 					}
 				}
-				if (-matrix4.m41 === wood4.m41 && matrix4.m43 === wood4.m43}) {
+				if (-matrix4.m41 === wood4.m41 && matrix4.m43 === wood4.m43) {
 					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
