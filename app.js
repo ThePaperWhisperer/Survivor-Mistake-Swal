@@ -72,7 +72,7 @@ var person;
 var roomnumber = 0;
 var otherplayer;
 socket.on("roomnotjoined", ()=>{
-	alert("Room not found, please try again...");
+	Swal.fire({text: "Room not found, please try again..."});
 	location.reload();
 });
 function foodget(){
@@ -87,20 +87,20 @@ deer.hidden = true;
 function hunt(e) {
 	if (e.key == "h" && document.activeElement != document.getElementById("message")) {
 		if(daynumber < 3){
-		alert("Click to get the deer in time.");
+		Swal.fire({text: "Click to get the deer in time."});
 		
 			deer.hidden = false;
 			deer.addEventListener("click", foodget);
 		
 		setTimeout(() => {
 			deer.removeEventListener("click", foodget);
-			alert("You have " + food + " food. Every day, ten food will be used.");
+			Swal.fire({text: "You have " + food + " food. Every day, ten food will be used."});
 			deer.hidden = true;
 		}, 5000);
 	}
 		else{
 			if(Math.floor(Math.random() * 5) === 2){
-						alert("Edible mushroom found! Each one will count as 4 food.");
+						Swal.fire({text: "Edible mushroom found! Each one will count as 4 food."});
 						food += 4;
 					}
 		}
@@ -184,14 +184,14 @@ socket.on("roomclosed", (data) => {
 		typeof users[1 + data.number] != "undefined" &&
 		typeof users[2 + data.number] != "undefined"
 	) {
-		alert(
+		Swal.fire({text: 
 			"Game room closed. Players are " +
 			users[0 + data.number] +
 			", " +
 			users[1 + data.number] +
 			", " +
 			users[2 + data.number]
-		);
+			  });
 		roomnumber = data.room;
 		var play = 0;
 		users.forEach((player) => {
@@ -211,16 +211,16 @@ socket.on("useradded", (u) => {
 	users = u;
 });
 socket.on("left", (leaving) => {
-	alert(leaving + " left.");
+	Swal.fire({text: leaving + " left."});
 });
 socket.on("joined", (per) => {
-	alert(per + " joined.");
+	Swal.fire({text: per + " joined."});
 });
 socket.on("leave", (u) => {
 	users = u;
 });
 socket.on("gameover", (killed) => {
-	alert(killed + " died.");
+	Swal.fire({text: killed + " died."});
 });
 var t;
 var day = document.createElement("h1");
@@ -236,7 +236,7 @@ function time(){
 clearTimeout(timeout)
 	if(night == false){
 		document.getElementById("night").style.opacity = "60%";
-			alert("It is night time. Go run around riskingly, or sleep safely in your shelter");
+			Swal.fire({text: "It is night time. Go run around riskingly, or sleep safely in your shelter"});
 		night = true;
 	}
 	else if(night == true){
@@ -249,7 +249,7 @@ clearTimeout(timeout)
 								 day.style.position = "relative";
 												 food -= 10;
 												 if(food < 0){
-													 alert("You do not have enough food. Game Over.");
+													 Swal.fire({text: "You do not have enough food. Game Over."});
 													 var attempt = confirm("Try again?");
 													 if(attempt == true){
 														 location.reload();
@@ -281,7 +281,7 @@ clearTimeout(timeout)
 		if(daynumber > 4){
 			thirst += 10;
 			if(thirst >=30){
-				 alert("You did not drink enough. Game Over.");
+				 Swal.fire({text: "You did not drink enough. Game Over."});
 													 var attempt = confirm("Try again?");
 													 if(attempt == true){
 														 location.reload();
@@ -291,7 +291,7 @@ clearTimeout(timeout)
 													 }
 			}
 		}
-		alert("Wake up sleepyhead! You must go live today!");
+		Swal.fire({text: "Wake up sleepyhead! You must go live today!"});
 		
 		night = false;
 												 setTimeout(()=> {
@@ -396,7 +396,7 @@ function load() {
 				fire.style.transform = "translate3d(" + b + "px, " + y + "px,"+ a +"px) perspective(" + (a + 5000) + "px)";
 				document.getElementById("universe").appendChild(fire);
 				firematrix = new WebKitCSSMatrix(getComputedStyle(fire).transform);
-				alert("The fire will burn for half the day. Press x whenever you have enough wood and need to cook your food.");
+				Swal.fire({text: "The fire will burn for half the day. Press x whenever you have enough wood and need to cook your food."});
 				task.value = 5;
 				task.max = 5;
 				setTimeout(()=> {
@@ -406,54 +406,54 @@ function load() {
 			}
 			if(e.key == "x" && fire.style.position ==="absolute" && daynumber >= 2){
 				if(firematrix.m41 === matrix4.m41 && firematrix.m43 === matrix4.m43 ){
-				alert("Food cooked. It will now fill you twice as much.");
+				Swal.fire({text: "Food cooked. It will now fill you twice as much."});
 				food = food * 2;
 				}
 			}
 			if (e.key == " ") {
 				
 				if (-matrix4.m41 === wood1.m41 && matrix4.m43 === wood1.m43) {
-					alert("Wood found!");
+					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
 						task.value = 5;
-						alert("Huh, maybe I should press x to build my house.");
+						Swal.fire({text: "Huh, maybe I should press x to build my house."});
 						house = true;
 					}
 				}
 				if (-matrix4.m41 === wood2.m41 && matrix4.m43 === wood2.m43) {
-					alert("Wood found!");
+					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
 						task.value = 5;
-						alert("Huh, maybe I should press x to build my house.");
+						Swal.fire({text: "Huh, maybe I should press x to build my house."});
 						house = true;
 					}
 				}
 				if (-matrix4.m41 === wood3.m41 && matrix4.m43 === wood3.m43) {
-					alert("Wood found!");
+					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
 						task.value = 5;
-						alert("Huh, maybe I should press x to build my house.");
+						Swal.fire({text: "Huh, maybe I should press x to build my house."});
 						house = true;
 					}
 				}
-				if (-matrix4.m41 === wood4.m41 && matrix4.m43 === wood4.m43) {
-					alert("Wood found!");
+				if (-matrix4.m41 === wood4.m41 && matrix4.m43 === wood4.m43}) {
+					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
 						task.value = 5;
-						alert("Huh, maybe I should press x to build my house.");
+						Swal.fire({text: "Huh, maybe I should press x to build my house."});
 						house = true;
 					}
 				}
 				if (-matrix4.m41 === wood5.m41 && matrix4.m43 === wood5.m43) {
-					alert("Wood found!");
+					Swal.fire({text: "Wood found!"});
 					task.value--;
 					if (task.value === 0 && daynumber < 2) {
 						task.value = 5;
-						alert("Huh, maybe I should press x to build my house where I am.");
+						Swal.fire({text: "Huh, maybe I should press x to build my house where I am."});
 						house = true;
 					}
 				}
@@ -461,7 +461,7 @@ function load() {
 			}
 				
 			if (e.key == "x" && house == true) {
-				alert("House built!");
+				Swal.fire({text: "House built!"});
 				house = false;
 				shelter = document.createElement("img");
 				shelter.style.position = "absolute";
@@ -472,14 +472,14 @@ function load() {
 				shelter.style.transform = "translate3d(" + b + "px, " + y + "px, " + a + "px) perspective(" + (a + 5000) + "px)";
 				document.getElementById("universe").appendChild(shelter);
 				sheltermatrix = new WebKitCSSMatrix(window.getComputedStyle(shelter).transform);
-				alert("Hint: If you ENTER your house, you have double your health.");
+				Swal.fire({text: "Hint: If you ENTER your house, you have double your health."});
 				tasks.innerHTML = "Find food";
-				alert("Go bring some food back home. Go hunting for food in a space by pressing 'h'.");
+				Swal.fire({text: "Go bring some food back home. Go hunting for food in a space by pressing 'h'."});
 				document.onkeydown = hunt;
 				socket.emit("house", sheltermatrix);
 			}
 			if(e.key == "Enter" && daynumber > 5 && -matrix4.m41 === 2000 && matrix4.m43 === 700){
-				alert("House Entered! Find the clues to discover what happened.");
+				Swal.fire({text: "House Entered! Find the clues to discover what happened."});
 				
 			}
 			if (sheltermatrix) {
@@ -503,7 +503,7 @@ function load() {
 
 			}
 			if(e.key == "d" && daynumber > 3 && a === 0 && b === 0){
-				alert("Your thirst went down by 5.");
+				Swal.fire({text: "Your thirst went down by 5."});
 				thirst -= 5;
 			}
 			matrix4 = new WebKitCSSMatrix(
@@ -592,12 +592,12 @@ socket.on('newmessage', messagenew => {
 });
 
 socket.on("firemade", (player)=>{
-	alert("Someone made a fire. It is at X: " + -player.m41 + ", Z: " + -player.m43);
+	Swal.fire({text: "Someone made a fire. It is at X: " + -player.m41 + ", Z: " + -player.m43});
 	fire.style.position = "absolute";
 				fire.style.transform = "translate3d(" + player.m41 + "px, " + player.m42 + "px, " + player.m43 + "px) perspective(" + (player.m43 + 5000) + "px)";
 				document.getElementById("universe").appendChild(fire);
 				firematrix = new WebKitCSSMatrix(getComputedStyle(fire).transform);
-				alert("The fire will burn for half the day. Press x whenever you have enough wood and need to cook your food.");
+				Swal.fire({text: "The fire will burn for half the day. Press x whenever you have enough wood and need to cook your food."});
 				task.value = 5;
 				task.max = 5;
 				setTimeout(()=> {
@@ -606,7 +606,7 @@ socket.on("firemade", (player)=>{
 })
 
 socket.on("housemade", (player)=>{
-	alert("Someone made a house. It is at X: " + -player.m41 + ", Z: " + -player.m43);
+	Swal.fire({text: "Someone made a house. It is at X: " + -player.m41 + ", Z: " + -player.m43});
 	house = false;
 				shelter = document.createElement("img");
 				shelter.style.position = "absolute";
@@ -617,15 +617,15 @@ socket.on("housemade", (player)=>{
 				shelter.style.transform = "translate3d(" + player.m41 + "px, " + player.m42 + "px, " + player.m43 + "px) perspective(" + (player.m43 + 5000) + "px)";
 				document.getElementById("universe").appendChild(shelter);
 				sheltermatrix = new WebKitCSSMatrix(window.getComputedStyle(shelter).transform);
-				alert("Hint: If you ENTER your house, you have double your health.");
+				Swal.fire({text: "Hint: If you ENTER your house, you have double your health."});
 				tasks.innerHTML = "Find food";
-				alert("Go bring some food back home. Go hunting for food in a space by pressing 'h'.");
+				Swal.fire({text: "Go bring some food back home. Go hunting for food in a space by pressing 'h'."});
 				document.onkeydown = hunt;
 })
  function notifyMe() {
   if (!("Notification" in window)) {
     // Check if the browser supports notifications
-    alert("This browser does not support desktop notification");
+    Swal.fire({text: "This browser does not support desktop notifications."});
   } else if (Notification.permission === "granted") {
     // Check whether notification permissions have already been granted;
     // if so, create a notification
