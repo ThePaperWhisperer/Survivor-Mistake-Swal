@@ -163,8 +163,11 @@ document.getElementById("ok").onclick = async () => {
 		 
 		document.getElementById("heli").play();
   speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
-	document.getElementById("heli").pause();
-	load();  
+				   setTimeout(()=> {
+					document.getElementById("heli").pause();
+					load();
+				   },10000)
+	  
 	
 })
 	
@@ -188,6 +191,7 @@ Swal.fire({
 	socket.emit("username", username);
  document.getElementById("heli").play();
 	 speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
+	 setTimeout(()=> {
 	document.getElementById("heli").pause();
 		 	const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	link = "";
@@ -197,6 +201,7 @@ Swal.fire({
 	socket.emit("self", link);
 	console.log(link);
 	load();  
+	 },10000)
 })
 	
 	
@@ -236,8 +241,11 @@ document.getElementById("no").onclick = async () => {
 
 	document.getElementById("heli").play();
  speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
-	document.getElementById("heli").pause();
-	load();  
+			 setTimeout(()=> {
+				document.getElementById("heli").pause();
+				load();
+			 },10000)
+	
 		 })
 });
 	
