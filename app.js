@@ -157,17 +157,36 @@ document.getElementById("ok").onclick = async () => {
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
+				   let ttsRecorder = new SpeechSynthesisRecorder({
+  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
+  utteranceOptions: {
+    voice: "english-us espeak",
+    lang: "en-US",
+    pitch: .75,
+    rate: 1
+  }
+});
 				   socket.emit("roomname", room);
 	socket.emit("password", password);
 		 
 		document.getElementById("heli").play();
 		 
-	speechSynthesis.speak(ss);	
-	ss.onend = ()=> {
+ttsRecorder.start()
+  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
+  .then(tts => tts.arrayBuffer())
+  .then(({tts, data}) => {
+    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
+    // `MediaSource`, `MediaStream`, `ReadableStream`
+    // `data` : `ArrayBuffer`
+    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
+    tts.audioNode.title = tts.utterance.text;
+    tts.audioNode.onloadedmetadata = () => {
+      console.log(tts.audioNode.duration);
+      tts.audioNode.play();
+    }
+  })
 	document.getElementById("heli").pause();
 		load();
-	}
 })
 	
 });
@@ -188,10 +207,29 @@ Swal.fire({
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
-	document.getElementById("heli").play();
-speechSynthesis.speak(ss);
-	ss.onend = ()=> {
+   let ttsRecorder = new SpeechSynthesisRecorder({
+  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
+  utteranceOptions: {
+    voice: "english-us espeak",
+    lang: "en-US",
+    pitch: .75,
+    rate: 1
+  }
+});	document.getElementById("heli").play();
+	ttsRecorder.start()
+  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
+  .then(tts => tts.arrayBuffer())
+  .then(({tts, data}) => {
+    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
+    // `MediaSource`, `MediaStream`, `ReadableStream`
+    // `data` : `ArrayBuffer`
+    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
+    tts.audioNode.title = tts.utterance.text;
+    tts.audioNode.onloadedmetadata = () => {
+      console.log(tts.audioNode.duration);
+      tts.audioNode.play();
+    }
+  })
 	document.getElementById("heli").pause();
 		const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	link = "";
@@ -201,7 +239,6 @@ speechSynthesis.speak(ss);
 	socket.emit("self", link);
 	console.log(link);
 		load();
-	}
 })
 	
 	
@@ -237,15 +274,33 @@ document.getElementById("no").onclick = async () => {
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-	ss = new SpeechSynthesisUtterance("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!");
-			 socket.emit("pass", pass);
+   let ttsRecorder = new SpeechSynthesisRecorder({
+  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
+  utteranceOptions: {
+    voice: "english-us espeak",
+    lang: "en-US",
+    pitch: .75,
+    rate: 1
+  }
+});			 socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
-speechSynthesis.speak(ss);
-	ss.onend = ()=> {
-	document.getElementById("heli").pause();
-		load();
-	}
+ttsRecorder.start()
+  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
+  .then(tts => tts.arrayBuffer())
+  .then(({tts, data}) => {
+    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
+    // `MediaSource`, `MediaStream`, `ReadableStream`
+    // `data` : `ArrayBuffer`
+    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
+    tts.audioNode.title = tts.utterance.text;
+    tts.audioNode.onloadedmetadata = () => {
+      console.log(tts.audioNode.duration);
+      tts.audioNode.play();
+    }
+  })
+			 document.getElementById("heli").pause();
+			 load();
 })
 });
 	
