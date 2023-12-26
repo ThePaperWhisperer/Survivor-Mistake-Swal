@@ -1,193 +1,104 @@
-// SpeechSynthesisRecorder.js guest271314 6-17-2017
-// Motivation: Get audio output from `window.speechSynthesis.speak()` call
-// as `ArrayBuffer`, `AudioBuffer`, `Blob`, `MediaSource`, `MediaStream`, `ReadableStream`, or other object or data types
-// See https://lists.w3.org/Archives/Public/public-speech-api/2017Jun/0000.html
-// https://github.com/guest271314/SpeechSynthesisRecorder
+var speakWorker;
+try {
+  speakWorker = new Worker('speakWorker.js');
+} catch(e) {
+  console.log('speak.js warning: no worker support');
+}
 
-// Configuration: Analog Stereo Duplex
-// Input Devices: Monitor of Built-in Audio Analog Stereo, Built-in Audio Analog Stereo
+function speak(text, args) {
+  var PROFILE = 1;
 
-/* global MediaRecorder SpeechSynthesisUtterance MediaStream MediaSource AudioContext navigator Blob ReadableStream URL Audio FileReader */
-class SpeechSynthesisRecorder {
-  constructor({
-    text = '', utteranceOptions = {}, recorderOptions = {}, dataType = ''
-  }) {
-    if (text === '') throw new Error('no words to synthesize')
-    this.dataType = dataType
-    this.text = text
-    this.mimeType = MediaRecorder.isTypeSupported('audio/webm; codecs=opus') ? 'audio/webm; codecs=opus' : 'audio/ogg; codecs=opus'
-    this.utterance = new SpeechSynthesisUtterance(this.text)
-    this.speechSynthesis = window.speechSynthesis
-    this.mediaStream_ = new MediaStream()
-    this.mediaSource_ = new MediaSource()
-    this.mediaRecorder = new MediaRecorder(this.mediaStream_, {
-      mimeType: this.mimeType,
-      bitsPerSecond: 256 * 8 * 1024
-    })
-    this.audioContext = new AudioContext()
-    this.audioNode = new Audio()
-    this.chunks = []
-    if (utteranceOptions) {
-      if (utteranceOptions.voice) {
-        this.speechSynthesis.onvoiceschanged = e => {
-          const voice = this.speechSynthesis.getVoices().find(({
-            name: _name
-          }) => _name === utteranceOptions.voice)
-          this.utterance.voice = voice
-          console.log(voice, this.utterance)
-        }
-        this.speechSynthesis.getVoices()
+  function parseWav(wav) {
+    function readInt(i, bytes) {
+      var ret = 0;
+      var shft = 0;
+      while (bytes) {
+        ret += wav[i] << shft;
+        shft += 8;
+        i++;
+        bytes--;
       }
-      let {
-        lang, rate, pitch
-      } = utteranceOptions;
-      console.log(rate)
-      Object.assign(this.utterance, {
-        lang, rate, pitch
-      })
+      return ret;
     }
-    console.log(this.utterance)
-    this.audioNode.controls = 'controls'
-    document.body.appendChild(this.audioNode)
+    if (readInt(20, 2) != 1) throw 'Invalid compression code, not PCM';
+    if (readInt(22, 2) != 1) throw 'Invalid number of channels, not 1';
+    return {
+      sampleRate: readInt(24, 4),
+      bitsPerSample: readInt(34, 2),
+      samples: wav.subarray(44)
+    };
   }
-  start(text = '') {
-    if (text) this.text = text
-    if (this.text === '') throw new Error('no words to synthesize')
-    return navigator.mediaDevices.getUserMedia({
-        audio: true
-      })
-      // set `getUserMedia()` constraints to "auidooutput", where avaialable
-      // see https://bugzilla.mozilla.org/show_bug.cgi?id=934425, https://stackoverflow.com/q/33761770
-      .then(stream => navigator.mediaDevices.enumerateDevices()
-        .then(devices => {
-          const audiooutput = devices.find(device => device.kind == "audiooutput");
-          stream.getTracks().forEach(track => track.stop())
-          if (audiooutput) {
-            const constraints = {
-              deviceId: {
-                exact: audiooutput.deviceId
-              }
-            };
-            return navigator.mediaDevices.getUserMedia({
-              audio: constraints
-            });
-          }
-          return navigator.mediaDevices.getUserMedia({
-            audio: true
-          });
-        }))
-      .then(stream => new Promise(resolve => {
-        const track = stream.getAudioTracks()[0]
-        this.mediaStream_.addTrack(track)
-          // return the current `MediaStream`
-        if (this.dataType && this.dataType === 'mediaStream') {
-          resolve({
-            tts: this,
-            data: this.mediaStream_
-          })
-        };
-        this.mediaRecorder.ondataavailable = event => {
-          if (event.data.size > 0) {
-            this.chunks.push(event.data)
-          };
+
+  function playHTMLAudioElement(wav) {
+    function encode64(data) {
+      var BASE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+      var PAD = '=';
+      var ret = '';
+      var leftchar = 0;
+      var leftbits = 0;
+      for (var i = 0; i < data.length; i++) {
+        leftchar = (leftchar << 8) | data[i];
+        leftbits += 8;
+        while (leftbits >= 6) {
+          var curr = (leftchar >> (leftbits-6)) & 0x3f;
+          leftbits -= 6;
+          ret += BASE[curr];
         }
-        this.mediaRecorder.onstop = () => {
-          track.stop()
-          this.mediaStream_.getAudioTracks()[0].stop()
-          this.mediaStream_.removeTrack(track)
-          console.log(`Completed recording ${this.utterance.text}`, this.chunks)
-          resolve(this)
-        }
-        this.mediaRecorder.start()
-        this.utterance.onstart = () => {
-          console.log(`Starting recording SpeechSynthesisUtterance ${this.utterance.text}`)
-        }
-        this.utterance.onend = () => {
-          this.mediaRecorder.stop()
-          console.log(`Ending recording SpeechSynthesisUtterance ${this.utterance.text}`)
-        }
-        this.speechSynthesis.speak(this.utterance)
-      }))
+      }
+      if (leftbits == 2) {
+        ret += BASE[(leftchar&3) << 4];
+        ret += PAD + PAD;
+      } else if (leftbits == 4) {
+        ret += BASE[(leftchar&0xf) << 2];
+        ret += PAD;
+      }
+      return ret;
+    }
+
+    document.getElementById("audio").innerHTML=("<audio id=\"player\" src=\"data:audio/x-wav;base64,"+encode64(wav)+"\">");
+    document.getElementById("player").play();
   }
-  blob() {
-    if (!this.chunks.length) throw new Error('no data to return')
-    return Promise.resolve({
-      tts: this,
-      data: this.chunks.length === 1 ? this.chunks[0] : new Blob(this.chunks, {
-        type: this.mimeType
-      })
-    })
+
+  function playAudioDataAPI(data) {
+    try {
+      var output = new Audio();
+      output.mozSetup(1, data.sampleRate);
+      var num = data.samples.length;
+      var buffer = data.samples;
+      var f32Buffer = new Float32Array(num);
+      for (var i = 0; i < num; i++) {
+        var value = buffer[i<<1] + (buffer[(i<<1)+1]<<8);
+        if (value >= 0x8000) value |= ~0x7FFF;
+        f32Buffer[i] = value / 0x8000;
+      }
+      output.mozWriteAudio(f32Buffer);
+      return true;
+    } catch(e) {
+      return false;
+    }
   }
-  arrayBuffer(blob) {
-    if (!this.chunks.length) throw new Error('no data to return')
-    return new Promise(resolve => {
-      const reader = new FileReader()
-      reader.onload = e => resolve(({
-        tts: this,
-        data: reader.result
-      }))
-      reader.readAsArrayBuffer(blob ? new Blob(blob, {
-        type: blob.type
-      }) : this.chunks.length === 1 ? this.chunks[0] : new Blob(this.chunks, {
-        type: this.mimeType
-      }))
-    })
+
+  function handleWav(wav) {
+    var startTime = Date.now();
+    var data = parseWav(wav); // validate the data and parse it
+    // TODO: try playAudioDataAPI(data), and fallback if failed
+    playHTMLAudioElement(wav);
+    if (PROFILE) console.log('speak.js: wav processing took ' + (Date.now()-startTime).toFixed(2) + ' ms');
   }
-  audioBuffer() {
-    if (!this.chunks.length) throw new Error('no data to return')
-    return this.arrayBuffer()
-      .then(({
-        tts, data
-      }) => this.audioContext.decodeAudioData(data))
-      .then(buffer => ({
-        tts: this,
-        data: buffer
-      }))
-  }
-  mediaSource() {
-    if (!this.chunks.length) throw new Error('no data to return')
-    return this.arrayBuffer()
-      .then(({
-        data: ab
-      }) => new Promise((resolve, reject) => {
-        this.mediaSource_.onsourceended = () => resolve({
-          tts: this,
-          data: this.mediaSource_
-        })
-        this.mediaSource_.onsourceopen = () => {
-          if (MediaSource.isTypeSupported(this.mimeType)) {
-            const sourceBuffer = this.mediaSource_.addSourceBuffer(this.mimeType)
-            sourceBuffer.mode = 'sequence'
-            sourceBuffer.onupdateend = () =>
-              this.mediaSource_.endOfStream()
-            sourceBuffer.appendBuffer(ab)
-          } else {
-            reject(new Error(`${this.mimeType} is not supported`))
-          }
-        }
-        this.audioNode.src = URL.createObjectURL(this.mediaSource_)
-      }))
-  }
-  readableStream({
-    size = 1024, controllerOptions = {}, rsOptions = {}
-  }) {
-    if (!this.chunks.length) throw new Error('no data to return')
-    const src = this.chunks.slice(0)
-    const chunk = size
-    return Promise.resolve({
-      tts: this,
-      data: new ReadableStream(controllerOptions || {
-        start(controller) {
-            console.log(src.length)
-            controller.enqueue(src.splice(0, chunk))
-          },
-          pull(controller) {
-            if (src.length === 0) controller.close()
-            controller.enqueue(src.splice(0, chunk))
-          }
-      }, rsOptions)
-    })
+
+  if (args && args.noWorker) {
+    // Do everything right now. speakGenerator.js must have been loaded.
+    var startTime = Date.now();
+    var wav = generateSpeech(text, args);
+    if (PROFILE) console.log('speak.js: processing took ' + (Date.now()-startTime).toFixed(2) + ' ms');
+    handleWav(wav);
+  } else {
+    // Call the worker, which will return a wav that we then play
+    var startTime = Date.now();
+    speakWorker.onmessage = function(event) {
+      if (PROFILE) console.log('speak.js: worker processing took ' + (Date.now()-startTime).toFixed(2) + ' ms');
+      handleWav(event.data);
+    };
+    speakWorker.postMessage({ text: text, args: args });
   }
 }
-if (typeof module !== 'undefined') module.exports = SpeechSynthesisRecorder
-if (typeof window !== 'undefined') window.SpeechSynthesisRecorder = SpeechSynthesisRecorder
