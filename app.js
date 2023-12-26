@@ -162,10 +162,9 @@ document.getElementById("ok").onclick = async () => {
 	socket.emit("password", password);
 		 
 		document.getElementById("heli").play();
-  speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
+  speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
 	document.getElementById("heli").pause();
 	load();  
-  })
 	
 })
 	
@@ -188,7 +187,7 @@ Swal.fire({
 	username = result.value;
 	socket.emit("username", username);
  document.getElementById("heli").play();
-	 speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
+	 speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
 	document.getElementById("heli").pause();
 		 	const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	link = "";
@@ -198,7 +197,6 @@ Swal.fire({
 	socket.emit("self", link);
 	console.log(link);
 	load();  
-  });
 })
 	
 	
@@ -237,10 +235,9 @@ document.getElementById("no").onclick = async () => {
    socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
- speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
+ speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!")
 	document.getElementById("heli").pause();
 	load();  
-  })
 		 })
 });
 	
