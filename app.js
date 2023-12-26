@@ -157,36 +157,16 @@ document.getElementById("ok").onclick = async () => {
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-				   let ttsRecorder = new SpeechSynthesisRecorder({
-  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
-  utteranceOptions: {
-    voice: "english-us espeak",
-    lang: "en-US",
-    pitch: .75,
-    rate: 1
-  }
-});
+
 				   socket.emit("roomname", room);
 	socket.emit("password", password);
 		 
 		document.getElementById("heli").play();
-		 
-ttsRecorder.start()
-  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
-  .then(tts => tts.arrayBuffer())
-  .then(({tts, data}) => {
-    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
-    // `MediaSource`, `MediaStream`, `ReadableStream`
-    // `data` : `ArrayBuffer`
-    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
-    tts.audioNode.title = tts.utterance.text;
-    tts.audioNode.onloadedmetadata = () => {
-      console.log(tts.audioNode.duration);
-      tts.audioNode.play();
-    }
-  })
+  speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
 	document.getElementById("heli").pause();
-		load();
+	load();  
+  })
+	
 })
 	
 });
@@ -207,38 +187,18 @@ Swal.fire({
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-   let ttsRecorder = new SpeechSynthesisRecorder({
-  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
-  utteranceOptions: {
-    voice: "english-us espeak",
-    lang: "en-US",
-    pitch: .75,
-    rate: 1
-  }
-});	document.getElementById("heli").play();
-	ttsRecorder.start()
-  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
-  .then(tts => tts.arrayBuffer())
-  .then(({tts, data}) => {
-    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
-    // `MediaSource`, `MediaStream`, `ReadableStream`
-    // `data` : `ArrayBuffer`
-    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
-    tts.audioNode.title = tts.utterance.text;
-    tts.audioNode.onloadedmetadata = () => {
-      console.log(tts.audioNode.duration);
-      tts.audioNode.play();
-    }
-  })
+ document.getElementById("heli").play();
+	 speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
 	document.getElementById("heli").pause();
-		const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
+		 	const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';
 	link = "";
 	for (var i = 0; i < 40; i++) {
 		link += characters.charAt(Math.floor(Math.random() * characters.length));
 	}
 	socket.emit("self", link);
 	console.log(link);
-		load();
+	load();  
+  });
 })
 	
 	
@@ -274,34 +234,14 @@ document.getElementById("no").onclick = async () => {
 }).then((result)=>{
 	username = result.value;
 	socket.emit("username", username);
-   let ttsRecorder = new SpeechSynthesisRecorder({
-  text: "Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!", 
-  utteranceOptions: {
-    voice: "english-us espeak",
-    lang: "en-US",
-    pitch: .75,
-    rate: 1
-  }
-});			 socket.emit("pass", pass);
+   socket.emit("pass", pass);
 
 	document.getElementById("heli").play();
-ttsRecorder.start()
-  // `tts` : `SpeechSynthesisRecorder` instance, `data` : audio as `dataType` or method call result
-  .then(tts => tts.arrayBuffer())
-  .then(({tts, data}) => {
-    // do stuff with `ArrayBuffer`, `AudioBuffer`, `Blob`,
-    // `MediaSource`, `MediaStream`, `ReadableStream`
-    // `data` : `ArrayBuffer`
-    tts.audioNode.src = URL.createObjectURL(new Blob([data], {type:tts.mimeType}));
-    tts.audioNode.title = tts.utterance.text;
-    tts.audioNode.onloadedmetadata = () => {
-      console.log(tts.audioNode.duration);
-      tts.audioNode.play();
-    }
+ speak("Hello "+ username +". Welcome to Survivor. We will pick you up in a month. OH NO WHAT IS THAT!!!!!!").then(()=> {
+	document.getElementById("heli").pause();
+	load();  
   })
-			 document.getElementById("heli").pause();
-			 load();
-})
+		 })
 });
 	
 });
