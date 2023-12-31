@@ -557,7 +557,7 @@ function load() {
 				document.onkeydown = hunt;
 				socket.emit("house", sheltermatrix);
 			}
-			if(e.key == "Enter" && daynumber > 5 && -matrix4.m41 === -1000 && matrix4.m43 === -1000){
+			if(e.key == "Enter" && daynumber > 5 && matrix4.m41 === -1000 && matrix4.m43 === 1000){
 				Swal.fire({text: "House Entered! Find the clues to discover what happened."});
 				
 			}
